@@ -12,7 +12,7 @@ import os
 
 # Open the source and target datasets
 target_ds = xr.open_dataset("/home/pouria/git/budyko-downscaled-grace/data/input_data/GRACE_monthly01.nc")
-source_ds = xr.open_dataset("/home/pouria/git/budyko-downscaled-grace/data/input_data/era5_monthly.nc")
+source_ds = xr.open_dataset("/home/pouria/git/budyko-downscaled-grace/data/input_data/eralandmonthly.nc")
 
 # Show variables and coordinate names to adjust if necessary
 print("Source dataset variables:", source_ds.data_vars)
@@ -25,7 +25,7 @@ print("Target coords:", target_ds.coords)
 # target_ds = target_ds.rename({'longitude': 'lon', 'latitude': 'lat'})
 
 # Build regridder with conservative method
-regridder = xe.Regridder(source_ds, target_ds, method='conservative')
+regridder = xe.Regridder(source_ds, target_ds, method='nearest_s2d')
 
 # Regrid a specific variable (e.g., 'precip')
 regridded_var = regridder(source_ds)
