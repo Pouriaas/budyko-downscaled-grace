@@ -17,8 +17,8 @@ warnings.filterwarnings("ignore")
 
 # === Input paths ===
 shapefile_path = "/home/pouria/git/budyko-downscaled-grace/data/shapefile/Karkheh_karun.shp"
-netcdf_path = "/home/pouria/git/budyko-downscaled-grace/data/parametersinnc/era5.nc"
-output_dir = "/home/pouria/git/budyko-downscaled-grace/data/parametersinnc/cropped"
+netcdf_path = "/home/pouria/git/budyko-downscaled-grace/data/input_data/era5_monthly.nc"
+output_dir = "/home/pouria/git/budyko-downscaled-grace/data/input_data"
 
 os.makedirs(output_dir, exist_ok=True)
 
@@ -29,7 +29,7 @@ region_ids = regions["Bas_Code"].astype(str).tolist()
 # === Load NetCDF with rioxarray ===
 ds = xr.open_dataset(netcdf_path, decode_times=False)
 ds = ds.rio.write_crs("EPSG:4326", inplace=True)  # Set CRS if not present
-ds = ds.rio.set_spatial_dims(x_dim="lon", y_dim="lat")
+ds = ds.rio.set_spatial_dims(x_dim="longitude", y_dim="latitude")
 
 # === Function to crop a single region ===
 def crop_region(i):
@@ -41,7 +41,7 @@ def crop_region(i):
 
 
     clipped = ds.rio.clip(geom, all_touched=True, drop=True, invert=False)
-    output_path = os.path.join(output_dir, f"{region_id}.nc")
+    output_path = os.path.join(output_dir, "era5_cut_by_basin.nc")
     clipped.to_netcdf(output_path)
     print(f"Saved: {output_path}")
 
